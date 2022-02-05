@@ -241,6 +241,26 @@ void eject() {
   stepperM2.disableOutputs();
 }
 
+void moveFront() {
+  stepperM1.enableOutputs();
+  stepperM2.enableOutputs();
+
+  moveTo(maxPos, 100);
+
+  stepperM1.disableOutputs();
+  stepperM2.disableOutputs();
+}
+
+void moveRear() {
+  stepperM1.enableOutputs();
+  stepperM2.enableOutputs();
+
+  moveTo(0, 100);
+
+  stepperM1.disableOutputs();
+  stepperM2.disableOutputs();
+}
+
 void loop() {
   if (Serial.available() > 0) {
     String stringCommand = Serial.readStringUntil('\n');
@@ -249,29 +269,47 @@ void loop() {
       case CMD_PING:
         Serial.println("PONG");
         break;
+      case CMD_MOVE_FRONT:
+        Serial.println("MOVING TO FRONT");
+        moveFront();
+        Serial.println("DONE");
+        break;
+      case CMD_MOVE_REAR:
+        Serial.println("MOVING TO REAR");
+        moveRear();
+        Serial.println("DONE");
+        break;
       case CMD_END:
-        Serial.println("START");
-        Serial.println("END");
+        Serial.println("STOPPING ALL CURRENT ACTIONS");
+        Serial.println("DONE");
         break;
       case CMD_EJECT:
-        Serial.println("START");
+        Serial.println("STARTING EJECT");
         eject();
-        Serial.println("END");
+        Serial.println("DONE");
         break;
       case CMD_FAN_ON:
-        digitalWrite(PIN_FAN, HIGH); 
+        Serial.println("TURNING FAN ON");
+        digitalWrite(PIN_FAN, HIGH);
         Serial.println("DONE");
         break;
       case CMD_FAN_OFF:
+        Serial.println("TURNING FAN OFF");
         digitalWrite(PIN_FAN, LOW); 
         Serial.println("DONE");
         break;
       case CMD_LED_ON:
+        Serial.println("TURNING LED ON");
         digitalWrite(PIN_LED, HIGH); 
         Serial.println("DONE");
         break;
       case CMD_LED_OFF:
+        Serial.println("TURNING LED OFF");
         digitalWrite(PIN_LED, LOW); 
+        Serial.println("DONE");
+        break;
+      case CMD_HOME:
+        Serial.println("TURNING");
         Serial.println("DONE");
         break;
       default:
